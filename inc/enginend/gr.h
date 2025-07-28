@@ -1,12 +1,6 @@
 #pragma once
-#define SDL
-#ifdef SDL
-#include "platform/sdl2.h"
-#include "modes.h"
-#endif
 #define GAME_GRAPHICS 1
-#include"term.h"
-
+#include<enginend.h>
 extern bool accelerated;
 class Window;
 
@@ -27,9 +21,7 @@ typedef struct buffer{
 	buffer():width(0),height(0),mode(0),data(0){};
 	~buffer(){free(data);};
 	void clear(){for (int i = 0; i < width * height; i++){
-		echo("clearing %i",i);
 		data[i] = {clearcolor.r,clearcolor.g,clearcolor.b,clearcolor.a};
-		
 		}};
 	
 };
@@ -100,15 +92,22 @@ public:
 
 class Window {
 	public:
+
+		bool running = true;
+		key keys;
+		mousee mouse;
 		void (**drawfuncs)(Object*,Window*)=nullptr;
 		Object** objects=nullptr;
 		int draws = 0;
 		windowtype window; renderertype renderer;
-		
+		SDL_Event event;
 		Window(int width, int height, const char* title);
 		~Window();
-		void update();
-		void bind(void (*func)(Object*,Window*), Object* obj);
+		bool eventupdate();
+        bool pressed(int key);
+        bool changed(int key);
+        void update();
+        void bind(void (*func)(Object*,Window*), Object* obj);
 		texturetype framebuffer;
 
 };

@@ -22,6 +22,7 @@
 #define INITDRAW SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); \
 	SDL_RenderClear(renderer);
 #define ENDDRAW SDL_RenderPresent(renderer);
+#define GETKEYEVENT 
 //SFX.H
 //!TYPES
 //!FUNCTIONS
