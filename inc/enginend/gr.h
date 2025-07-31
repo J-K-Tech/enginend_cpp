@@ -75,7 +75,7 @@ public:
 	class model:public Object3D{
 		public:
 			float *vertices;
-			Triangle *faces[3];	
+			Triangle *faces;	
 			void render(Window* window) {}
 	};
 	class World3D:public Object3D{
