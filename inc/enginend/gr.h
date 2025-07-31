@@ -66,17 +66,19 @@ public:
 		vec3(float x, float y, float z):x(x),y(y),z(z){};
 	};
 	struct Triangle{
-		vec3 a,b,c;
-		Triangle(vec3 a, vec3 b, vec3 c):a(a),b(b),c(c){};
-		Triangle():a(0,0,0),b(0,0,0),c(0,0,0){};
-		
+		//index
+		int v0,v1,v2;
+		vec3 normal;
+		Triangle(int v0, int v1, int v2):v0(v0),v1(v1),v2(v2){};
 	};
 
 	class model:public Object3D{
 		public:
-			float *vertices;
-			Triangle *faces;	
+			vec3* vertices;
+			Triangle *faces;
 			void render(Window* window) {}
+			model(){};
+			model(vec3* vertices, Triangle* faces):vertices(vertices),faces(faces){};
 	};
 	class World3D:public Object3D{
 	public:
