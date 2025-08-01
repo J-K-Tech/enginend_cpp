@@ -37,10 +37,10 @@ public:
 #if GAME_GRAPHICS >=0
 class Object2D: public Object{
 	public:
-		float x, y;	float roll;
+		short x, y;	short roll;
 		buffer pixelbuffer;
 		Object2D(){};
-		Object2D(float x, float y):x(x),y(y),pixelbuffer(x,y,0){};
+		Object2D(short x, short y):x(x),y(y),pixelbuffer(x,y,0){};
 		void render(Window* window) {}
 };
 class World:public Object2D{
@@ -53,17 +53,28 @@ public:
 	void render(Window* window) override;
 };
 	#if GAME_GRAPHICS >=1
-
+struct Camera {
+	vec3 position;
+	vec3 rotation;
+	short fov;
+	short aspect;
+	short nearClip;
+	short farClip;
+	Camera() {}
+	Camera(vec3 pos, vec3 rot, short fov, short aspect, short nearClip = 0.1f, short farClip = 1000.0f)
+		: position(pos), rotation(rot), fov(fov), aspect(aspect), nearClip(nearClip), farClip(farClip) {}
+	mat4 getviewmatrix() {
+		mat4 rot= mat4::rotation(rotation.x, rotation.y, rotation.z);
+		mat4 trans= mat4::translation(-position.x, -position.y, -position.z);
+		return trans * rot;
+	}
+	};
 	class Object3D: public Object2D{
 		public:
-			float z;	float pitch, yaw;
+			short z;	short pitch, yaw;
 			Object3D(){};
-			Object3D(float x, float y,float z):Object2D(x,y){this->z = z;};
+			Object3D(short x, short y,short z):Object2D(x,y){this->z = z;};
 			void render(Window* window) {}
-	};
-	struct vec3{
-		float x,y,z;
-		vec3(float x, float y, float z):x(x),y(y),z(z){};
 	};
 	struct Triangle{
 		//index
@@ -79,11 +90,12 @@ public:
 			void render(Window* window) {}
 			model(){};
 			model(vec3* vertices, Triangle* faces):vertices(vertices),faces(faces){};
+			~model(){free(vertices);free(faces);};
 	};
 	class World3D:public Object3D{
 	public:
 		color fog;
-		Object3D camera;
+		Camera camera;
 		model* stuff;
 
 		World3D(){};
@@ -106,10 +118,10 @@ class Window {
 		Window(int width, int height, const char* title);
 		~Window();
 		bool eventupdate();
-        bool pressed(int key);
-        bool changed(int key);
-        void update();
-        void bind(void (*func)(Object*,Window*), Object* obj);
+		bool pressed(int key);
+		bool changed(int key);
+		void update();
+		void bind(void (*func)(Object*,Window*), Object* obj);
 		texturetype framebuffer;
 
 };
